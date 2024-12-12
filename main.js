@@ -83,8 +83,38 @@ for (let item of data) {
             <h2
               class="text-blue-500 font-bold text-xl my-1"
             >${item.price}</h2>
-            <button class=" text-white p-1 w-full rounded-md mt-2 active:scale-95 duration-300 bg-gray-900 ">Add to card</button>
+            <button onCLick="sendMessageToBot('${item.title}', '${item.price}')" class=" text-white p-1 w-full rounded-md mt-2 active:scale-95 duration-300 bg-gray-900 ">Add to card</button>
           </div>
         </article>
 `;
+}
+
+function sendMessageToBot(title, price) {
+  console.log("Tanlov:", title, "Narxi:", price);
+
+  const message = `Sizning tanlovingiz: ${title}, narxi: ${price}`;
+
+  const botToken = "8126944357:AAFXETVRTudt_8xbm6dGQzqllrlgIdemL3g";
+  const chatId = "5833556474";
+
+  fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: message,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Bot javobi:", data);
+      if (data.ok) {
+        console.log("Xabar muvaffaqiyatli yuborildi");
+      } else {
+        console.error("Xatolik:", data.description);
+      }
+    })
+    .catch((error) => console.error("Xatolik:", error));
 }
